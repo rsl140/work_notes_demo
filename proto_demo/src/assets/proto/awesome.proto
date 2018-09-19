@@ -1,0 +1,30 @@
+syntax = "proto2";//protobuf版本
+option java_package = "com.test.protobuf";
+option java_outer_classname = "PersonMessage";
+message Person {
+  required int32 id = 1;
+  optional string name = 2;
+  optional string email = 3;
+  repeated string list = 4;
+  extensions 100 to 1000;//允许扩展的ID
+}
+
+message PersonTree {
+  optional string id = 1;
+  optional string title = 2;
+  repeated PersonTree childs = 3;
+}
+
+extend Person {
+  optional int32 count = 101;
+  optional int32 likes_cnt= 102;
+}
+
+message PersonEx {
+  optional int32 id = 1;
+  extend Person {
+    optional int32 px = 103;
+    optional int32 py= 104;
+  }
+  optional Person p = 2;
+}
