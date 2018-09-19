@@ -54,5 +54,49 @@ publicjs.data2blob = (data, mime) => {
   })
 }
 
+/**
+ * protobuf拼接为uint8后转为blob流发送
+ * @param {*} protobuf 上传的数据
+ */
+publicjs.sendMessageToBack = (protobuf) => {
+  const pbLength = publicjs.intToByteArray(protobuf.length)
+
+  const buffer = new ArrayBuffer(protobuf.length + 4)
+  const uint8 = new Uint8Array(buffer)
+  uint8.set(pbLength, 0)
+  uint8.set(protobuf, 4)
+  // 转为blob流
+  const uploadDatas = new FormData()
+  var blob = new Blob([uint8], {
+    type: 'application/octet-stream'
+  })
+
+  uploadDatas.append('protobuf', blob)
+  return uploadDatas
+}
+
+/**
+ * blob流回传后通过arrybuffer解析为Uint8Array 返回
+ * @param {*} res 返回值
+ */
+publicjs.getMessageFromBack = res => {
+  const dataView = new DataView(res.data)
+  const uint8 = new Uint8Array(dataView.byteLength)
+
+  // 遍历返回arrybuffer存为Uint8Array
+  for (let index = 0; index < dataView.byteLength; index++) {
+    uint8[index] = dataView.getUint8(index)
+  }
+
+  const pbLengthGet = uint8.slice(0, 4)
+  const portobuff = uint8.slice(8)
+
+  const respone = {
+    length: pbLengthGet,
+    data: portobuff
+  }
+
+  return respone
+}
 
 export default publicjs
