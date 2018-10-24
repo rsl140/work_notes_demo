@@ -99,4 +99,40 @@ publicjs.getMessageFromBack = res => {
   return respone
 }
 
+/**
+ * 数组对象排序(sort方法重写)
+ * @param {*} prop 排序的对象
+ * @param {Boolean} time 是否为时间格式
+ * useing: obj.sort(this.publicjs.compare('createtime', true))
+ */
+publicjs.compare = (prop, time) => {
+  return function (obj1, obj2) {
+      let val1 = obj1[prop]
+      let val2 = obj2[prop]
+      if (time) {
+        // 如果是时间格式
+        if (moment(val1).isBefore(val2)) {
+          return 1
+        } else if (moment(val1).isAfter(val2)) {
+          return -1
+        } else {
+            return 0
+        }
+      } else {
+        if (!isNaN(Number(val1)) && !isNaN(Number(val2))) {
+          val1 = Number(val1)
+          val2 = Number(val2)
+        }
+        if (val1 < val2) {
+            return -1
+        } else if (val1 > val2) {
+            return 1
+        } else {
+            return 0
+        }
+      }
+
+  }
+}
+
 export default publicjs
