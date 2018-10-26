@@ -135,4 +135,25 @@ publicjs.compare = (prop, time) => {
   }
 }
 
+/**
+ * input延迟发送请求
+ * 使用方法：
+ *   created () {
+ *     this.$watch('input', this.publicjs.debounce((newQuery) => {
+ *       这里写function
+ *     }, 500))
+ *   },
+ */
+publicjs.debounce = (func, delay) => {
+  let timer
+  return (...args) => {
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      func.apply(this, args)
+    }, delay)
+  }
+}
+
 export default publicjs
