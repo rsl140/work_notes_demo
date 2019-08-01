@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="renderer" content="webkit">
+<title>h5</title>
+<link href="summernote.css" rel="stylesheet" type="text/css" media="screen"/>
+<link href="bootstrap.min.css" rel="stylesheet" type="text/css" media="screen"/>
+<script src="jquery-2.1.4.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="bootstrap.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="summernote.js" charset="utf-8"></script>
+<script type="text/javascript" src="lang/summernote-zh-CN.js" charset="utf-8"></script>
+<!-- add kity botton logic -->
+<script type="text/javascript" src="./plugin/kityplugin/summernote-ext-kity.js"></script>
+<style>
+.note-editable {
+  height:calc(100vh - 72px);
+}
+</style>
+<!-- kityformula-plugin -->
+<script src="./kityformula-plugin/dev-lib/kitygraph.all.js"></script>
+<script src="./kityformula-plugin/dev-lib/kity-formula-render.all.js"></script>
+<script src="./kityformula-plugin/dev-lib/kity-formula-parser.all.js"></script>
+<script src="./kityformula-plugin/dev-lib/dev-define.js"></script>
+<script>
+  inc.config({
+    base: './kityformula-plugin/src'
+  });
+</script>
+<script src="./kityformula-plugin/dev-lib/exports.js"></script>
+<script src="./kityformula-plugin/dev-lib/start.js"></script>
+<script src="./kityformula-plugin/dev-lib/dev-start.js"></script>
+
+<link rel="stylesheet" href="./kityformula-plugin/assets/styles/page.css">
+<link rel="stylesheet" href="./kityformula-plugin/assets/styles/base.css">
+<link rel="stylesheet" href="./kityformula-plugin/assets/styles/ui.css">
+<link rel="stylesheet" href="./kityformula-plugin/assets/styles/scrollbar.css">
+</head>
+<body scroll="no">
+  <div id="summernote"></div>
+  <!-- <button onClick="readFile('12080.html')">read</button>
+  <button onClick="saveAsHtml(null,'E:\\Work\\summernote\\test.html')">save</button> -->
+<!-- <button onClick="test()">test</button> -->
+</body>
+<script>
+  //初始化
+  $(document).ready(function() {
+    setTimeout(function() {
+      var $summernote = $('#summernote');
+      var height = $summernote.height();
+      $summernote.summernote({
+        lang:'zh-CN',
+        disableDragAndDrop:false,
+        toolbar: [
+          ['style', ['bold', 'italic', 'underline', 'clear']],
+          ['font', ['strikethrough', 'superscript', 'subscript']],
+          ['fontsize', ['fontsize']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['Misc', ['fullscreen']],
+          ['height', ['height']],
+          ['insert', ['kity', 'picture']]
+        ],
+        popover: {
+          image: [
+            ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
+            ['float', ['floatLeft', 'floatRight', 'floatNone']],
+            ['remove', ['removeMedia']],
+            ['insert', ['kity']]
+          ],
+          link: [
+            ['link', ['linkDialogShow', 'unlink']]
+          ],
+          air: [
+            ['color', ['color']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['para', ['ul', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture']]
+          ]
+        }
+      });
+    }, 10);
+  });
+
+  //获取内容
+  function getSummernoteContent() {
+    var $summernote = $('#summernote');
+    var content = $summernote.summernote('code');
+    return content;
+  }
+
+  //赋值内容
+  function setSummernoteContent(content) {
+    var $summernote = $('#summernote');
+    $summernote.summernote('code', content);
+  }
+
+  //读取网络文件 也可以读取已经发布的项目内的文件
+  function readFile(filename) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', filename, true);
+      xhr.withCredentials = true;
+      xhr.onload = function(e) {
+          if (this.status == 200) {
+              setSummernoteContent(this.response);
+          }
+          else {
+              alert("network is error!");
+          }
+      };
+      xhr.send();
+  };
+
+  //保存成为一个文件  如果需要设置路径就必须设置浏览器的下载路径
+  function saveAsHtml(filename) {
+    var $summernote = $('#summernote');
+    var content = $summernote.summernote('code');
+    var blob = new Blob([content], { type: "text/xml"});
+    var urlObject = window.URL || window.webkitURL || window;
+
+    var save_link = document.createElementNS("http://test/1999/xhtml", "a")
+    save_link.href = urlObject.createObjectURL(blob);
+    save_link.download = filename;
+    var ev = document.createEvent("MouseEvents");
+    ev.initMouseEvent(
+          "click", true, false, window, 0, 0, 0, 0, 0
+          , false, false, false, false, 0, null
+    );
+    save_link.dispatchEvent(ev);
+  }
+  function test () {
+    $('#summernote').summernote('insertImage', 'http://www.guangyuanol.cn/uploads/allimg/190202/10521C559-1.jpg', function
+    ($image) {
+      $image.attr('class', 'kfformula');
+    })
+  }
+</script>
+</html>
