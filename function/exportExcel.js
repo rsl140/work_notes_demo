@@ -23,4 +23,5 @@ function DownloadFileStream (res, name) {
   a.download = name
   a.click()
   document.body.removeChild(a) // 下载完成移除元素
+  _URL.revokeObjectURL(objectUrl) // 释放blob
 }
