@@ -1,0 +1,128 @@
+{
+  "name": "electron-vue2",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "electron": "electron ./app/",
+    "dev": "cross-env NODE_ENV=development electron ./app/",
+    "build": "cross-env NODE_ENV=production vue-cli-service build",
+    "electron:copy": "cpx ./app/**/*.js ./build",
+    "pack:mac": "npm run build && npm run electron:copy && electron-builder --mac",
+    "pack:win": "npm run build && npm run electron:copy && electron-builder --win",
+    "pack:all": "npm run build && npm run electron:copy && electron-builder --win && electron-builder --mac",
+    "test:unit": "vue-cli-service test:unit",
+    "lint": "vue-cli-service lint"
+  },
+  "build": {
+    "extraMetadata": {
+      "main": "build/index.js"
+    },
+    "extraResources": [
+      {
+        "from": "resources/",
+        "to": "./"
+      }
+    ],
+    "productName": "test",
+    "appId": "com.test.app",
+    "files": [
+      "build/**/*"
+    ],
+    "mac": {
+      "icon": "./resources/icons/icon.icns",
+      "artifactName": "${productName}_setup_${version}.${ext}"
+    },
+    "dmg": {
+      "sign": false,
+      "artifactName": "${productName}_setup_${version}.${ext}"
+    },
+    "win": {
+      "icon": "./resources/icons/icon.ico",
+      "artifactName": "${productName}_setup_${version}.${ext}",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "ia32"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "icon": "build/icons"
+    },
+    "nsis": {
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false,
+      "artifactName": "${productName}_setup_${version}.${ext}"
+    },
+    "directories": {
+      "buildResources": "assets",
+      "output": "release"
+    }
+  },
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "electron-store": "^8.0.1",
+    "element-ui": "^2.15.6",
+    "vue": "^2.6.11",
+    "vue-router": "^3.2.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-unit-jest": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/eslint-config-standard": "^5.1.2",
+    "@vue/test-utils": "^1.0.3",
+    "babel-eslint": "^10.1.0",
+    "cpx": "^1.5.0",
+    "cross-env": "^7.0.3",
+    "electron": "^16.0.7",
+    "electron-builder": "^22.14.5",
+    "eslint": "^6.7.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-vue": "^6.2.2",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^8.0.2",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "@vue/standard"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {},
+    "overrides": [
+      {
+        "files": [
+          "**/__tests__/*.{j,t}s?(x)",
+          "**/tests/unit/**/*.spec.{j,t}s?(x)"
+        ],
+        "env": {
+          "jest": true
+        }
+      }
+    ]
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "jest": {
+    "preset": "@vue/cli-plugin-unit-jest"
+  }
+}
