@@ -62,6 +62,12 @@ function createWindow () {
               type: 'info'
             })
           }
+        },
+        {
+          label: 'ping',
+          click: () => {
+            mainWindow.webContents.send('ping', ['ping', app.getPath('userData')])
+          }
         }
       ]
     }

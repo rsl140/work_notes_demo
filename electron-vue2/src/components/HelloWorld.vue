@@ -13,11 +13,16 @@
     </div>
     <div class="mb10">
       <el-button class="mr10 w10" @click="about">about</el-button>
+      <el-button class="mr10 w40" @click="openBaidu">在默认浏览器中打开百度</el-button>
+    </div>
+    <div class="mb10">
+      fromMainDate:{{fromMainDate}}
     </div>
   </div>
 </template>
 
 <script>
+const ipc = window.ipc
 export default {
   name: 'HelloWorld',
   props: {
@@ -29,39 +34,39 @@ export default {
       saveStoreVal: '',
       getStoreName: '',
       getStoreCallBackName: '',
-      showGetStore: ''
+      showGetStore: '',
+      fromMainDate: ''
+    }
+  },
+  created () {
+    try {
+      ipc.on('ping', (e, f) => {
+        this.fromMainDate = f
+      })
+    } catch (error) {
+
     }
   },
   methods: {
-    about () {
+    openBaidu () {
       try {
-        const ipc = window.ipc
-        ipc.send('about')
+        ipc.send('open-url', 'https://www.baidu.com')
       } catch (error) {
 
       }
     },
+    about () {
+      ipc.send('about')
+    },
     saveStore () {
-      try {
-        const ipc = window.ipc
-        if (ipc) {
-          ipc.send('saveStore', { storeName: this.saveStoreName, val: this.saveStoreVal })
-        }
-      } catch (error) {
-      }
+      ipc.send('saveStore', { storeName: this.saveStoreName, val: this.saveStoreVal })
     },
     getStore () {
-      try {
-        const ipc = window.ipc
-        if (ipc) {
-          ipc.send('getStore', { storeName: this.getStoreName, callBackName: this.getStoreCallBackName })
-          ipc.on(this.getStoreCallBackName, (e, f) => {
-            console.log(f)
-            this.showGetStore = f
-          })
-        }
-      } catch (error) {
-      }
+      ipc.send('getStore', { storeName: this.getStoreName, callBackName: this.getStoreCallBackName })
+      ipc.on(this.getStoreCallBackName, (e, f) => {
+        console.log(f)
+        this.showGetStore = f
+      })
     }
   }
 }
